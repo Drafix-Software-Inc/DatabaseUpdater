@@ -1,0 +1,10 @@
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\bin\Debug\DatabaseUpdater.exe.config
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\bin\Debug\DatabaseUpdater.exe
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\bin\Debug\DatabaseUpdater.pdb
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.csproj.AssemblyReference.cache
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.Properties.Resources.resources
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.csproj.GenerateResource.cache
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.csproj.CoreCompileInputs.cache
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.exe
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.pdb
+C:\Users\czuni\source\repos\Drafix\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.MainForm.resources
