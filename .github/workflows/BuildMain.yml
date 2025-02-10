@@ -1,0 +1,52 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: DatabaseUpdater CI/CD Build
+
+# Specify the conditions when this action will be fired.
+on:
+  # Fire this workflow when any user pushes changes to the branch
+  push:
+    branches:
+      - main
+      - feature/*
+
+  # Fire this workflow when any user issues a pull request (when a child branch is merged into this branch) to feature/V26.0 branch
+  pull_request:
+    branches:  
+      - main
+      - feature/*
+      
+  workflow_dispatch:    
+
+# A workflow is a series of jobs (there could be only one job) that run sequentially
+jobs:
+  # This workflow has a single job, called build
+  build:
+
+    # select the runner - this should be the latest version of Windows
+    runs-on: self-hosted
+
+    steps:
+    # Download the latest version of the code into $GITHUB-WORKSPACE, so the job can see it
+    - name: Get latest version
+      uses: actions/checkout@v4
+
+    # Setup MSBuild, this assures that all the paths are correct for doing a Visual Studio Build
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    # Setup NuGet
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+
+    # Need to update any NuGet packages that are out of date, or download any missing ones
+    - name: Restore Packages
+      run: nuget restore DatabaseUpdater.sln
+
+    # Everything is setup, and we have all of our NuGet packages, so do the build
+    - name: Build solution
+      run: msbuild DatabaseUpdater.sln -t:rebuild -property:Configuration=Release
+
+    - name: Copy Code
+      run: C:/actions-runner/CopyCode DatabaseUpdater
