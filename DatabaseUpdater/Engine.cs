@@ -55,6 +55,9 @@ namespace DatabaseUpdater
             // Execute the stored procedure
             ExecuteStoredProcedure("DrafixUpdate", "dbo.USP_Upgrade_26_0");
 
+            //Close Connections
+
+
             //Detach DrafixUpdate Database
             bool detachSuccess = DetachDatabase("DrafixUpdate");
 
