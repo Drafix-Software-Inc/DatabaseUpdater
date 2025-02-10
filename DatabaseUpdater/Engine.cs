@@ -72,6 +72,9 @@ namespace DatabaseUpdater
                 return false;
             }
 
+            // Exit the application after the process is done
+            Application.Exit();
+
             return true;
         }
 
