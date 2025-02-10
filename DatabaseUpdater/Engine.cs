@@ -56,7 +56,7 @@ namespace DatabaseUpdater
             ExecuteStoredProcedure("DrafixUpdate", "dbo.USP_Upgrade_26_0");
 
             //Close Connections
-
+            CloseDatabaseConnections("DrafixUpdate");
 
             //Detach DrafixUpdate Database
             bool detachSuccess = DetachDatabase("DrafixUpdate");
@@ -236,6 +236,37 @@ namespace DatabaseUpdater
                 }
             }
         }
+
+        /// <summary>
+        /// Closeing connections to the database
+        /// </summary>
+        /// <param name="databaseName">The name of the database to detach.</param>
+        /// <returns>True if the database was successfully detached; otherwise, false.</returns>
+        private void CloseDatabaseConnections(string databaseName)
+        {
+            string connectionString = $@"Server=localhost\SQLEXPRESS;Database={databaseName};Trusted_Connection=True;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string sql = $@"
+            DECLARE @DBID INT = DB_ID('{databaseName}');
+            IF @DBID IS NOT NULL
+            BEGIN
+                DECLARE @SQL NVARCHAR(MAX) = '';
+                SELECT @SQL = @SQL + 'KILL ' + CAST(spid AS NVARCHAR(10)) + '; '
+                FROM sys.sysprocesses
+                WHERE dbid = @DBID;
+                EXEC sp_executesql @SQL;
+            END";
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
         /// <summary>
         /// Detaches a database from SQL Server.
