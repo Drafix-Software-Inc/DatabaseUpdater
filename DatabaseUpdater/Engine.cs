@@ -54,6 +54,7 @@ namespace DatabaseUpdater
 
             // Execute the stored procedure
             ExecuteStoredProcedure("DrafixUpdate", "dbo.USP_Upgrade_26_0");
+            Console.WriteLine("Uploading new objects.");
 
             //Close Connections
             CloseDatabaseConnections("DrafixUpdate");

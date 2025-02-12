@@ -50,7 +50,7 @@
             this.ProgressLabel.Name = "ProgressLabel";
             this.ProgressLabel.Size = new System.Drawing.Size(81, 13);
             this.ProgressLabel.TabIndex = 1;
-            this.ProgressLabel.Text = "Stuff and things";
+            this.ProgressLabel.Text = "Uploading Data";
             // 
             // Progress
             // 
