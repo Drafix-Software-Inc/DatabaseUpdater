@@ -59,13 +59,33 @@ namespace DatabaseUpdater
             //Close Connections
             CloseDatabaseConnections("DrafixUpdate");
 
-            //Detach DrafixUpdate Database
+            //Detach DrafixUpdate Database and Deletes the DrafixUpdate MDF and LDF files
             bool detachSuccess = DetachDatabase("DrafixUpdate");
 
             if (detachSuccess)
             {
                 _Form.UpdateStatus("Database 'DrafixUpdate' detached successfully.", 100, 100, true);
 
+                //Delete MDF and LDF files after succesfu detachment
+                try
+                {
+                    if (File.Exists(databaseFilePath))
+                    {
+                        File.Delete(databaseFilePath);
+                        Console.WriteLine("Deleted DrafixUpdate.mdf");
+                    }
+
+                    if (File.Exists(logFilePath))
+                    {
+                        File.Delete(logFilePath);
+                        Console.WriteLine("Deleted DrafixUpdate_log.ldf");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _Form.UpdateStatus($"Error deleting database files: {ex.Message}", 100, 100, false);
+                    return false;
+                }
             }
             else
             {
