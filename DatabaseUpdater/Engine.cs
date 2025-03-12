@@ -220,11 +220,11 @@ namespace DatabaseUpdater
             //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
 
-
-            using (OdbcConnection connection = new OdbcConnection(connectionString))
+            try
             {
-                try
+                using (OdbcConnection connection = new OdbcConnection(connectionString))
                 {
+
                     connection.Open();
 
                     // Query to check if the database exists
@@ -235,13 +235,14 @@ namespace DatabaseUpdater
                         isAttached = (int)command.ExecuteScalar() > 0;
                     }
                 }
-                catch (Exception ex)
-                {
-                    if (_Form.IsLoggingOn)
-                        _Form.log.WriteLine($"Error {ex.Message}");
-                    _Form.UpdateStatus("Error checking database attachment: " + ex.Message, 100, 100, false);
-                }
             }
+            catch (Exception ex)
+            {
+                if (_Form.IsLoggingOn)
+                    _Form.log.WriteLine($"Error {ex.Message}");
+                _Form.UpdateStatus("Error checking database attachment: " + ex.Message, 100, 100, false);
+            }
+
 
             return isAttached;
         }
@@ -258,11 +259,11 @@ namespace DatabaseUpdater
             //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
 
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
-
-            using (OdbcConnection connection = new OdbcConnection(connectionString))
+            try
             {
-                try
+                using (OdbcConnection connection = new OdbcConnection(connectionString))
                 {
+
                     connection.Open();
 
                     // SQL command to attach the database
@@ -280,15 +281,16 @@ namespace DatabaseUpdater
                         return true;
                     }
                 }
-                catch (Exception ex)
-                {
-                    if (_Form.IsLoggingOn)
-                        _Form.log.WriteLine($"Error {ex.Message}");
-                    _Form.UpdateStatus("Error attaching the database: " + ex.Message, 100, 100, false);
-
-                    return false;
-                }
             }
+            catch (Exception ex)
+            {
+                if (_Form.IsLoggingOn)
+                    _Form.log.WriteLine($"Error {ex.Message}");
+                _Form.UpdateStatus("Error attaching the database: " + ex.Message, 100, 100, false);
+
+                return false;
+            }
+
         }
 
         /// <summary>
@@ -301,12 +303,12 @@ namespace DatabaseUpdater
             bool result = false;
             //string connectionString = $@"Server=localhost\SQLEXPRESS;Database={databaseName};Trusted_Connection=True;";
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
-
-
-            using (OdbcConnection connection = new OdbcConnection(connectionString))
+            try
             {
-                try
+
+                using (OdbcConnection connection = new OdbcConnection(connectionString))
                 {
+
                     connection.Open();
                     using (OdbcCommand command = new OdbcCommand(storedProcedureName, connection))
                     {
@@ -318,15 +320,16 @@ namespace DatabaseUpdater
                         result = true;
                     }
                 }
-                catch (Exception ex)
-                {
-                    if (_Form.IsLoggingOn)
-                        _Form.log.WriteLine($"Error {ex.Message}");
-                    _Form.UpdateStatus("Error executing stored procedure: " + ex.Message, 100, 100, false);
-
-                }
-                return result;
             }
+            catch (Exception ex)
+            {
+                if (_Form.IsLoggingOn)
+                    _Form.log.WriteLine($"Error {ex.Message}");
+                _Form.UpdateStatus("Error executing stored procedure: " + ex.Message, 100, 100, false);
+
+            }
+            return result;
+
         }
 
         /// <summary>
@@ -338,11 +341,12 @@ namespace DatabaseUpdater
         {
             //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
-
-            using (OdbcConnection conn = new OdbcConnection(connectionString))
+            try
             {
-                conn.Open();
-                string sql = $@"
+                using (OdbcConnection conn = new OdbcConnection(connectionString))
+                {
+                    conn.Open();
+                    string sql = $@"
         DECLARE @DBID INT = DB_ID('{databaseName}');
         IF @DBID IS NOT NULL
         BEGIN
@@ -355,10 +359,18 @@ namespace DatabaseUpdater
                 EXEC sp_executesql @SQL;
         END";
 
-                using (OdbcCommand cmd = new OdbcCommand(sql, conn))
-                {
-                    cmd.ExecuteNonQuery();
+                    using (OdbcCommand cmd = new OdbcCommand(sql, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                if (_Form.IsLoggingOn)
+                    _Form.log.WriteLine($"Error {ex.Message}");
+                _Form.UpdateStatus("Error executing stored procedure: " + ex.Message, 100, 100, false);
+
             }
         }
 
@@ -374,11 +386,11 @@ namespace DatabaseUpdater
             //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
 
-
-            using (OdbcConnection connection = new OdbcConnection(connectionString))
+            try
             {
-                try
+                using (OdbcConnection connection = new OdbcConnection(connectionString))
                 {
+
                     connection.Open();
 
                     // SQL command to detach the database
@@ -392,15 +404,16 @@ namespace DatabaseUpdater
                         return true;
                     }
                 }
-                catch (Exception ex)
-                {
-                    if (_Form.IsLoggingOn)
-                        _Form.log.WriteLine($"Error {ex.Message}");
-                    _Form.UpdateStatus("Error detaching the database: " + ex.Message, 100, 100, false);
-
-                    return false;
-                }
             }
+            catch (Exception ex)
+            {
+                if (_Form.IsLoggingOn)
+                    _Form.log.WriteLine($"Error {ex.Message}");
+                _Form.UpdateStatus("Error detaching the database: " + ex.Message, 100, 100, false);
+
+                return false;
+            }
+
         }
     }
 }
