@@ -5,6 +5,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using System.Diagnostics.Contracts;
+using System.Data.Odbc;
 
 namespace DatabaseUpdater
 {
@@ -163,17 +164,19 @@ namespace DatabaseUpdater
         private bool IsDatabaseAttached(string databaseName)
         {
             bool isAttached = false;
-            string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+            //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+            string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
 
                     // Query to check if the database exists
-                    string checkDatabaseQuery = $"SELECT COUNT(*) FROM sys.databases WHERE name = @databaseName";
-                    using (SqlCommand command = new SqlCommand(checkDatabaseQuery, connection))
+                    string checkDatabaseQuery = $"SELECT COUNT(*) FROM sys.databases WHERE name = ?";
+                    using (OdbcCommand command = new OdbcCommand(checkDatabaseQuery, connection))
                     {
                         command.Parameters.AddWithValue("@databaseName", databaseName);
                         isAttached = (int)command.ExecuteScalar() > 0;
@@ -197,9 +200,11 @@ namespace DatabaseUpdater
         /// <returns>True if the database was successfully attached; otherwise, false.</returns>
         private bool AttachDatabase(string databaseName, string dataFilePath, string logFilePath)
         {
-            string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+            //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
+
+            using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
                 try
                 {
@@ -212,7 +217,7 @@ namespace DatabaseUpdater
                            (FILENAME = '{logFilePath}')
                         FOR ATTACH;";
 
-                    using (SqlCommand command = new SqlCommand(attachQuery, connection))
+                    using (OdbcCommand command = new OdbcCommand(attachQuery, connection))
                     {
                         command.ExecuteNonQuery();
                         _Form.UpdateStatus($"Database '{databaseName}' attached successfully.", 100, 100, true);
@@ -236,14 +241,16 @@ namespace DatabaseUpdater
         /// <param name="storedProcedureName">The name of the stored procedure to execute.</param>
         private void ExecuteStoredProcedure(string databaseName, string storedProcedureName)
         {
-            string connectionString = $@"Server=localhost\SQLEXPRESS;Database={databaseName};Trusted_Connection=True;";
+            //string connectionString = $@"Server=localhost\SQLEXPRESS;Database={databaseName};Trusted_Connection=True;";
+            string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand(storedProcedureName, connection))
+                    using (OdbcCommand command = new OdbcCommand(storedProcedureName, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
@@ -268,9 +275,10 @@ namespace DatabaseUpdater
         /// <returns>True if the database was successfully detached; otherwise, false.</returns>
         private void CloseDatabaseConnections(string databaseName)
         {
-            string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+            //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+            string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (OdbcConnection conn = new OdbcConnection(connectionString))
             {
                 conn.Open();
                 string sql = $@"
@@ -286,7 +294,7 @@ namespace DatabaseUpdater
                 EXEC sp_executesql @SQL;
         END";
 
-                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                using (OdbcCommand cmd = new OdbcCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -302,9 +310,11 @@ namespace DatabaseUpdater
         /// <returns>True if the database was successfully detached; otherwise, false.</returns>
         private bool DetachDatabase(string databaseName)
         {
-            string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+            //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
+            string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+
+            using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
                 try
                 {
@@ -313,7 +323,7 @@ namespace DatabaseUpdater
                     // SQL command to detach the database
                     string detachQuery = $@"EXEC sp_detach_db '{databaseName}', 'true';";
 
-                    using (SqlCommand command = new SqlCommand(detachQuery, connection))
+                    using (OdbcCommand command = new OdbcCommand(detachQuery, connection))
                     {
                         command.ExecuteNonQuery();
                         _Form.UpdateStatus($"Database '{databaseName}' detached successfully.", 100, 100, true);
