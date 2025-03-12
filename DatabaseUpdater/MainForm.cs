@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,11 +16,18 @@ namespace DatabaseUpdater
     public partial class MainForm : Form
     {
         public delegate void WriteToStatusLine1Delegate(string message, int count, int total, bool success);
+        public StreamWriter log;
+        public bool IsLoggingOn = false;
 
-
-        public MainForm()
+        public MainForm(string[] args, StreamWriter log)
         {
             InitializeComponent();
+            this.log = log;
+            foreach (var arg in args)
+            {
+                if (arg.ToLower() == "/l" || arg.ToLower() == "-l" || arg.ToLower() == "--logging")
+                    IsLoggingOn = true;
+            }
         }
 
         /// <summary>
@@ -59,6 +67,7 @@ namespace DatabaseUpdater
         {
             UpdateStatus("Opening Connection to Database", 0, 100, true);
             var Engine = new Engine(this);
+
             Engine.Run();
         }
     }

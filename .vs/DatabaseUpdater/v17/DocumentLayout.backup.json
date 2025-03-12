@@ -7,16 +7,21 @@
       "RelativeMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|solutionrelative:databaseupdater\\engine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Public\\Documents\\PRO Landscape\\Database\\DatabaseUpdaterLog.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\databaseupdater\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|solutionrelative:databaseupdater\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|DatabaseUpdater||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\databaseupdater\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|solutionrelative:databaseupdater\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\databaseupdater\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|solutionrelative:databaseupdater\\mainform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{B46AC9CD-192A-49B8-A039-20D73B3DB9AD}|DatabaseUpdater\\DatabaseUpdater.csproj|c:\\users\\czuni\\source\\repos\\drafix\\databaseupdater\\databaseupdater\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +31,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 16,
           "Children": [
             {
               "$type": "Bookmark",
@@ -86,51 +91,64 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DatabaseUpdaterLog.txt",
+              "DocumentMoniker": "C:\\Users\\Public\\Documents\\PRO Landscape\\Database\\DatabaseUpdaterLog.txt",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Public\\Documents\\PRO Landscape\\Database\\DatabaseUpdaterLog.txt",
+              "ToolTip": "C:\\Users\\Public\\Documents\\PRO Landscape\\Database\\DatabaseUpdaterLog.txt",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Public\\Documents\\PRO Landscape\\Database\\DatabaseUpdaterLog.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2025-03-12T22:22:59.828Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DatabaseUpdater",
+              "DocumentMoniker": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\DatabaseUpdater.csproj",
+              "RelativeDocumentMoniker": "DatabaseUpdater\\DatabaseUpdater.csproj",
+              "ToolTip": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\DatabaseUpdater.csproj",
+              "RelativeToolTip": "DatabaseUpdater\\DatabaseUpdater.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-12T22:02:44.126Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Engine.cs",
               "DocumentMoniker": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\Engine.cs",
               "RelativeDocumentMoniker": "DatabaseUpdater\\Engine.cs",
               "ToolTip": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\Engine.cs*",
               "RelativeToolTip": "DatabaseUpdater\\Engine.cs*",
-              "ViewState": "AgIAACUBAAAAAAAAAAAawEMBAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAGQAAAAAAAAAAAAAAJUBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-07T03:56:06.538Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "MainForm.cs",
               "DocumentMoniker": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\MainForm.cs",
               "RelativeDocumentMoniker": "DatabaseUpdater\\MainForm.cs",
               "ToolTip": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\MainForm.cs",
               "RelativeToolTip": "DatabaseUpdater\\MainForm.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAABBwD8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAAEUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-07T03:55:49.008Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MainForm.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\MainForm.cs",
-              "RelativeDocumentMoniker": "DatabaseUpdater\\MainForm.cs",
-              "ToolTip": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\MainForm.cs [Design]",
-              "RelativeToolTip": "DatabaseUpdater\\MainForm.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-07T03:55:44.82Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\Program.cs",
               "RelativeDocumentMoniker": "DatabaseUpdater\\Program.cs",
               "ToolTip": "C:\\Users\\czuni\\source\\repos\\Drafix\\DatabaseUpdater\\DatabaseUpdater\\Program.cs",
               "RelativeToolTip": "DatabaseUpdater\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACAAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-07T03:55:41.145Z",
               "EditorCaption": ""
