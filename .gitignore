@@ -398,3 +398,5 @@ FodyWeavers.xsd
 *.sln.iml
 /DatabaseUpdater/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
 /DatabaseUpdater/obj/Debug/DatabaseUpdater.csproj.AssemblyReference.cache
+/.vs/DatabaseUpdater/v17/.suo
+/.vs/DatabaseUpdater/v17/DocumentLayout.json
