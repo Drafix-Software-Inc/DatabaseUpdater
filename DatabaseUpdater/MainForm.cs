@@ -56,10 +56,6 @@ namespace DatabaseUpdater
                 Progress.Value = count;
                 Progress.Maximum = total;
                 Progress.Minimum = 0;
-                if (!success)
-                {
-                    MessageBox.Show(progressText, "Database Updater", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
             }
         }
 

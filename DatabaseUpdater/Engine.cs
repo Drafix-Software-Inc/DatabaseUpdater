@@ -39,22 +39,26 @@ namespace DatabaseUpdater
                 {
                     Logit($"Could not find {databaseFilePath}");
                     _Form.UpdateStatus("Cannot find database file", 100, 100, false);
-                    return false;
+					Logit($"Done");
+					Application.Exit();
+					return false;
                 }
                 else
                     Logit($"Found {databaseFilePath}");
 
                 if (!File.Exists(logFilePath))
                 {
-					Logit($"Could not find {logFilePath}");
+                    Logit($"Could not find {logFilePath}");
                     _Form.UpdateStatus("Cannot find database file", 100, 100, false);
-                    return false;
+					Logit($"Done");
+					Application.Exit();
+					return false;
                 }
-				else
-					Logit($"Found {logFilePath}");
+                else
+                    Logit($"Found {logFilePath}");
 
-				// Check if the database is attached in SQL Server
-				Logit($"Checking to see if Database is Attached");
+                // Check if the database is attached in SQL Server
+                Logit($"Checking to see if Database is Attached");
                 if (!IsDatabaseAttached("DrafixUpdate"))
                 {
                     if (_Form.IsLoggingOn)
@@ -186,8 +190,9 @@ namespace DatabaseUpdater
         private bool IsDatabaseAttached(string databaseName)
         {
             bool isAttached = false;
-            //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
-            string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
+			string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
+
+            Logit($"IsDatabaseAttached: Connecting to database: {connectionString}");
 
             using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
@@ -196,14 +201,18 @@ namespace DatabaseUpdater
 
                 // Query to check if the database exists
                 string checkDatabaseQuery = $"SELECT COUNT(*) FROM sys.databases WHERE name = ?";
-                using (OdbcCommand command = new OdbcCommand(checkDatabaseQuery, connection))
+
+				Logit($"IsDatabaseAttached: Running query {checkDatabaseQuery} using {databaseName}");
+
+				using (OdbcCommand command = new OdbcCommand(checkDatabaseQuery, connection))
                 {
                     command.Parameters.AddWithValue("@databaseName", databaseName);
                     isAttached = (int)command.ExecuteScalar() > 0;
                 }
             }
 
-            return isAttached;
+			Logit($"IsDatabaseAttached: Returning {isAttached}");
+			return isAttached;
         }
 
         /// <summary>
@@ -218,8 +227,9 @@ namespace DatabaseUpdater
             //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
 
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
+			Logit($"AttachDatabase: Connecting to database: {connectionString}");
 
-            using (OdbcConnection connection = new OdbcConnection(connectionString))
+			using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
                 connection.Open();
 
@@ -230,12 +240,15 @@ namespace DatabaseUpdater
                            (FILENAME = '{logFilePath}')
                         FOR ATTACH;";
 
-                using (OdbcCommand command = new OdbcCommand(attachQuery, connection))
+				Logit($"AttachDatabase: Running query {attachQuery}");
+
+				using (OdbcCommand command = new OdbcCommand(attachQuery, connection))
                 {
                     command.ExecuteNonQuery();
                     _Form.UpdateStatus($"Database '{databaseName}' attached successfully.", 100, 100, true);
-                }
-            }
+					Logit($"AttachDatabase: Success");
+				}
+			}
         }
 
         /// <summary>
@@ -246,20 +259,24 @@ namespace DatabaseUpdater
         {
             //string connectionString = $@"Server=localhost\SQLEXPRESS;Database={databaseName};Trusted_Connection=True;";
             string connectionString = "DSN=DrafixSQL;Database=DrafixUpdate;ExtendedAnsiSQL=1;TrustedConnection=True;";
+			Logit($"ExecuteStoredProcedure: Connecting to database: {connectionString}");
 
-            using (OdbcConnection connection = new OdbcConnection(connectionString))
+			using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
-
                 connection.Open();
-                using (OdbcCommand command = new OdbcCommand(storedProcedureName, connection))
+
+				Logit($"ExecuteStoredProcedure: Executing {storedProcedureName}");
+
+				using (OdbcCommand command = new OdbcCommand(storedProcedureName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
                     // Execute the stored procedure
                     command.ExecuteNonQuery();
                     _Form.UpdateStatus($"Stored procedure '{storedProcedureName}' executed successfully.", 100, 100, true);
-                }
-            }
+					Logit($"ExecuteStoredProcedure: Success");
+				}
+			}
         }
 
         /// <summary>
@@ -271,9 +288,12 @@ namespace DatabaseUpdater
         {
             //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
-            using (OdbcConnection conn = new OdbcConnection(connectionString))
+			Logit($"CloseDatabaseConnections: Connecting to database: {connectionString}");
+
+			using (OdbcConnection conn = new OdbcConnection(connectionString))
             {
                 conn.Open();
+
                 string sql = $@"
         DECLARE @DBID INT = DB_ID('{databaseName}');
         IF @DBID IS NOT NULL
@@ -287,11 +307,15 @@ namespace DatabaseUpdater
                 EXEC sp_executesql @SQL;
         END";
 
-                using (OdbcCommand cmd = new OdbcCommand(sql, conn))
+
+				Logit($"CloseDatabaseConnections: Executing {sql}");
+
+				using (OdbcCommand cmd = new OdbcCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
-                }
-            }
+					Logit($"CloseDatabaseConnections: Success");
+				}
+			}
         }
 
 
@@ -305,8 +329,9 @@ namespace DatabaseUpdater
         {
             //string connectionString = @"Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;";
             string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
+			Logit($"DetachDatabase: Connecting to database: {connectionString}");
 
-            using (OdbcConnection connection = new OdbcConnection(connectionString))
+			using (OdbcConnection connection = new OdbcConnection(connectionString))
             {
 
                 connection.Open();
@@ -314,12 +339,16 @@ namespace DatabaseUpdater
                 // SQL command to detach the database
                 string detachQuery = $@"EXEC sp_detach_db '{databaseName}', 'true';";
 
-                using (OdbcCommand command = new OdbcCommand(detachQuery, connection))
+				Logit($"DetachDatabase: Executing {detachQuery}");
+
+
+				using (OdbcCommand command = new OdbcCommand(detachQuery, connection))
                 {
                     command.ExecuteNonQuery();
                     _Form.UpdateStatus($"Database '{databaseName}' detached successfully.", 100, 100, true);
-                }
-            }
+					Logit($"DetachDatabase: Success");
+				}
+			}
         }
     }
 }
