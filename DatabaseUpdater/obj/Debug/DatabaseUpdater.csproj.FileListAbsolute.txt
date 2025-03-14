@@ -18,3 +18,13 @@ C:\Source\GitHub\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.cspro
 C:\Source\GitHub\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.csproj.CoreCompileInputs.cache
 C:\Source\GitHub\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.exe
 C:\Source\GitHub\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.pdb
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\bin\Debug\DatabaseUpdater.exe.config
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\bin\Debug\DatabaseUpdater.exe
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\bin\Debug\DatabaseUpdater.pdb
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.csproj.AssemblyReference.cache
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.MainForm.resources
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.Properties.Resources.resources
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.csproj.GenerateResource.cache
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.csproj.CoreCompileInputs.cache
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.exe
+C:\Users\Micha\source\repos\DatabaseUpdater\DatabaseUpdater\obj\Debug\DatabaseUpdater.pdb
