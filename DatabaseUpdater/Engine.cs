@@ -199,11 +199,7 @@ namespace DatabaseUpdater
 							hkODBCINI.Close();
 							hkODBC.Close();
 							hkSoftware.Close();
-
-							Logit("    Couldn't open HKLM\\Software\\ODBC\\ODBC.INI\\ODBC Data Sources");
-							Logit("    The DrafixSQL driver, if it exists, is not configured properly.");
 							Logit();
-							return false;
 						}
 
 						if (foundDrafixSQL)
