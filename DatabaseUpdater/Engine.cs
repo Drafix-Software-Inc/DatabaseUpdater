@@ -79,6 +79,25 @@ namespace DatabaseUpdater
 							else
                                 Logit("The DrafixSLQ ODBC Driver was NOT found - this program will not work.");
 
+                            var hksources = hkODBCINI.OpenSubKey("ODBC Data Sources");
+                            Logit($"List of ODBC Data Sources");
+                            Logit($"   --------------------------------------------------");
+
+
+                            if (hksources != null)
+                            {
+                                foreach (var name in hksources.GetValueNames())
+                                {
+                                    Logit($"   {name}");
+                                }
+
+                                hksources.Close();
+                            }
+
+                            else
+                                Logit("Couldn't open HKLM\\Software\\ODBC\\ODBC.INI\\ODBC Data Sources");
+
+
                             hkODBCINI.Close();
 						}
                         else
