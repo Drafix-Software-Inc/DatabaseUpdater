@@ -179,29 +179,6 @@ namespace DatabaseUpdater
 
 						Logit();
 
-						var hksources = hkODBCINI.OpenSubKey("ODBC Data Sources");
-						Logit($"    --------------------------------------------------");
-						Logit($"    List of ODBC Data Sources");
-						Logit($"    --------------------------------------------------");
-
-						if (hksources != null)
-						{
-							foreach (var name in hksources.GetValueNames())
-							{
-								Logit($"        {name}");
-							}
-
-							Logit();
-							hksources.Close();
-						}
-						else
-						{
-							hkODBCINI.Close();
-							hkODBC.Close();
-							hkSoftware.Close();
-							Logit();
-						}
-
 						if (foundDrafixSQL)
 						{
 							var hkDrafixSQL = hkODBCINI.OpenSubKey("DrafixSQL");
