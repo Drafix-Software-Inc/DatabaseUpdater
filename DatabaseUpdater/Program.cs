@@ -56,8 +56,10 @@ namespace DatabaseUpdater
             {
 				using (var client = new WebClient())
 				{
-					client.Credentials = new NetworkCredential(ftpUsername, ftpPassword);
-					client.UploadFile("ftp://host/path.zip", WebRequestMethods.Ftp.UploadFile, logFile);
+					client.Credentials = new NetworkCredential("c24zuniga", "fast24reports!");
+                    var url = $"ftp://proland.dyndns.biz:2121//DatabaseUpdaterLogs//Log_{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Day:00}{DateTime.Now.Hour:00}{DateTime.Now.Minute:00}.log";
+
+                    client.UploadFile(url, WebRequestMethods.Ftp.UploadFile, logFile);
 				}
 			}
         }
