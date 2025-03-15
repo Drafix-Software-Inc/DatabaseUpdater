@@ -22,7 +22,73 @@ namespace DatabaseUpdater
             try
             {
                 Logit($"Version {Assembly.GetExecutingAssembly().GetName().Version}");
-				Logit("Getting Database Path");
+                Logit($"Validate that the ODBC driver is present");
+
+                var hkSoftware = Registry.LocalMachine.OpenSubKey("Software");
+
+                if (hkSoftware != null)
+                {
+                    var hkODBC = hkSoftware.OpenSubKey("ODBC");
+
+                    if (hkODBC != null)
+                    {
+                        var hkODBCINI = hkODBC.OpenSubKey("ODBC.INI");
+
+                        if (hkODBCINI != null)
+                        {
+                            Logit("Opened Registry key HKLM\\Software\\ODBC\\ODBC.INI");
+
+							Logit($"Key has {hkODBCINI.SubKeyCount} subkeys");
+
+                            bool foundDrafixSQL = false;
+
+							foreach ( var name in hkODBCINI.GetSubKeyNames())
+                            {
+								Logit($"   {name}");
+
+                                if (name.Equals("DrafixSQL", StringComparison.CurrentCultureIgnoreCase))
+                                    foundDrafixSQL = true;
+							}
+
+                            if (foundDrafixSQL)
+                            {
+
+                                var hkDrafixSQL = hkODBCINI.OpenSubKey("DrafixSQL");
+
+                                if (hkDrafixSQL != null)
+                                {
+									Logit($"   --------------------------------------------------");
+									Logit($"   ODBC Driver {hkDrafixSQL.GetValue("Driver")}");
+									Logit($"   Server {hkDrafixSQL.GetValue("Server")}");
+									Logit($"   Trusted Connection {hkDrafixSQL.GetValue("Trusted_Connection")}");
+									Logit($"   Trust Server Certificate {hkDrafixSQL.GetValue("TrustServerCertificate")}");
+
+									hkDrafixSQL.Close();
+								    Logit("The DrafixSQL ODBC Driver was found - the rest of this program should work.");
+                                }
+                                else
+									Logit("Couldn't open HKLM\\Software\\ODBC\\ODBC.INI\\DrafixSQL");
+
+							}
+							else
+                                Logit("The DrafixSLQ ODBC Driver was NOT found - this program will not work.");
+
+                            hkODBCINI.Close();
+						}
+                        else
+							Logit("Couldn't open HKLM\\Software\\ODBC\\ODBC.INI");
+
+                        hkODBC.Close();
+					}
+					else
+                        Logit("Couldn't open HKLM\\Software\\ODBC");
+
+                    hkSoftware.Close();
+                }
+                else
+                    Logit("Couldn't open HKLM\\Software");
+
+                Logit("Getting Database Path");
 
                 // Get the database path
                 string databasePath = GetDatabasePath();
