@@ -21,8 +21,14 @@ namespace DatabaseUpdater
         {
             try
             {
-                Logit($"Version {Assembly.GetExecutingAssembly().GetName().Version}");
-                Logit($"Validate that the ODBC driver is present");
+				Logit($"Version {Assembly.GetExecutingAssembly().GetName().Version}");
+
+				if ( Environment.Is64BitOperatingSystem )
+				    Logit($"Operating System: {Environment.OSVersion.Platform} 64 bit");
+                else
+					Logit($"Operating System: {Environment.OSVersion.Platform} 32 bit");
+
+				Logit($"Validate that the ODBC driver is present");
 
                 var hkSoftware = Registry.LocalMachine.OpenSubKey("Software");
 
