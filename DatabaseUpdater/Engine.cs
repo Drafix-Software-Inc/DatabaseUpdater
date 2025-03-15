@@ -494,8 +494,6 @@ namespace DatabaseUpdater
 			}
         }
 
-
-
         /// <summary>
         /// Detaches a database from SQL Server.
         /// </summary>

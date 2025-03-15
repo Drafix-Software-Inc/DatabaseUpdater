@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -47,6 +48,18 @@ namespace DatabaseUpdater
                 if (IsLoggingOn)
                     log.Close();
             }
+
+            //  Now that we have a log
+            //  FTP that log to the FTP Site
+
+            if ( IsLoggingOn )
+            {
+				using (var client = new WebClient())
+				{
+					client.Credentials = new NetworkCredential(ftpUsername, ftpPassword);
+					client.UploadFile("ftp://host/path.zip", WebRequestMethods.Ftp.UploadFile, logFile);
+				}
+			}
         }
     }
 }
