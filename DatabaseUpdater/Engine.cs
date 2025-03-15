@@ -20,201 +20,285 @@ namespace DatabaseUpdater
         public bool Run()
         {
             try
-            {
+			{
 				Logit($"Version {Assembly.GetExecutingAssembly().GetName().Version}");
 
-				if ( Environment.Is64BitOperatingSystem )
-				    Logit($"Operating System: {Environment.OSVersion.Platform} 64 bit");
-                else
-					Logit($"Operating System: {Environment.OSVersion.Platform} 32 bit");
-
-				Logit($"Validate that the ODBC driver is present");
-
-                var hkSoftware = Registry.LocalMachine.OpenSubKey("Software");
-
-                if (hkSoftware != null)
-                {
-                    var hkODBC = hkSoftware.OpenSubKey("ODBC");
-
-                    if (hkODBC != null)
-                    {
-                        var hkODBCINI = hkODBC.OpenSubKey("ODBC.INI");
-
-                        if (hkODBCINI != null)
-                        {
-                            Logit("Opened Registry key HKLM\\Software\\ODBC\\ODBC.INI");
-
-							Logit($"Key has {hkODBCINI.SubKeyCount} subkeys");
-
-                            bool foundDrafixSQL = false;
-
-							foreach ( var name in hkODBCINI.GetSubKeyNames())
-                            {
-								Logit($"   {name}");
-
-                                if (name.Equals("DrafixSQL", StringComparison.CurrentCultureIgnoreCase))
-                                    foundDrafixSQL = true;
-							}
-
-                            if (foundDrafixSQL)
-                            {
-
-                                var hkDrafixSQL = hkODBCINI.OpenSubKey("DrafixSQL");
-
-                                if (hkDrafixSQL != null)
-                                {
-									Logit($"   --------------------------------------------------");
-									Logit($"   ODBC Driver {hkDrafixSQL.GetValue("Driver")}");
-									Logit($"   Server {hkDrafixSQL.GetValue("Server")}");
-									Logit($"   Trusted Connection {hkDrafixSQL.GetValue("Trusted_Connection")}");
-									Logit($"   Trust Server Certificate {hkDrafixSQL.GetValue("TrustServerCertificate")}");
-
-									hkDrafixSQL.Close();
-								    Logit("The DrafixSQL ODBC Driver was found - the rest of this program should work.");
-                                }
-                                else
-									Logit("Couldn't open HKLM\\Software\\ODBC\\ODBC.INI\\DrafixSQL");
-
-							}
-							else
-                                Logit("The DrafixSLQ ODBC Driver was NOT found - this program will not work.");
-
-                            var hksources = hkODBCINI.OpenSubKey("ODBC Data Sources");
-                            Logit($"List of ODBC Data Sources");
-                            Logit($"   --------------------------------------------------");
-
-
-                            if (hksources != null)
-                            {
-                                foreach (var name in hksources.GetValueNames())
-                                {
-                                    Logit($"   {name}");
-                                }
-
-                                hksources.Close();
-                            }
-
-                            else
-                                Logit("Couldn't open HKLM\\Software\\ODBC\\ODBC.INI\\ODBC Data Sources");
-
-
-                            hkODBCINI.Close();
-						}
-                        else
-							Logit("Couldn't open HKLM\\Software\\ODBC\\ODBC.INI");
-
-                        hkODBC.Close();
-					}
-					else
-                        Logit("Couldn't open HKLM\\Software\\ODBC");
-
-                    hkSoftware.Close();
-                }
-                else
-                    Logit("Couldn't open HKLM\\Software");
-
-                Logit("Getting Database Path");
-
-                // Get the database path
-                string databasePath = GetDatabasePath();
-
-				Logit($"The Database Path is {databasePath}");
-
-                // Check if the DrafixUpdate.mdf file exists
-                string databaseFilePath = Path.Combine(databasePath, "DrafixUpdate.mdf");
-                string logFilePath = Path.Combine(databasePath, "DrafixUpdate_log.ldf");
-
-				Logit($"Checking to see if .mdf and .ldf files exist");
-
-                if (!File.Exists(databaseFilePath))
-                {
-                    Logit($"Could not find {databaseFilePath}");
-                    _Form.UpdateStatus("Cannot find database file", 100, 100, false);
+				if (!CheckOperatingSystem())
+				{
 					Logit($"Done");
 					Application.Exit();
 					return false;
-                }
-                else
-                    Logit($"Found {databaseFilePath}");
+				}
 
-                if (!File.Exists(logFilePath))
-                {
-                    Logit($"Could not find {logFilePath}");
-                    _Form.UpdateStatus("Cannot find database file", 100, 100, false);
+				if (!CheckODBCDrivers())
+				{
 					Logit($"Done");
 					Application.Exit();
 					return false;
-                }
-                else
-                    Logit($"Found {logFilePath}");
+				}
 
-                // Check if the database is attached in SQL Server
-                Logit($"Checking to see if Database is Attached");
-                if (!IsDatabaseAttached("DrafixUpdate"))
-                {
-                    if (_Form.IsLoggingOn)
-                        _Form.log.WriteLine($"The database is not attached, attempting to attach it");
-                    _Form.UpdateStatus("Database 'DrafixUpdate' is not attached to SQL Server. Attempting to attach...", 100, 100, true);
+				Logit();
+
+				//	Validate that we can connect to the database, using the ODBC drivers.
+				ValidateDatabaseConnection();
+				Logit();
+
+				// Get the database path
+				string databasePath = GetDatabasePath();
+				Logit($"Database Path: {databasePath}");
+
+				if ( !DoFilesExist(databasePath, out string databaseFilePath, out string logFilePath))
+				{
+					Logit($"Done");
+					Application.Exit();
+					return false;
+				}
+
+				// Check if the database is attached in SQL Server
+				Logit($"Checking to see if Database is Attached");
+				if (!IsDatabaseAttached("DrafixUpdate"))
+				{
+					if (_Form.IsLoggingOn)
+						_Form.log.WriteLine($"The database is not attached, attempting to attach it");
+					_Form.UpdateStatus("Database 'DrafixUpdate' is not attached to SQL Server. Attempting to attach...", 100, 100, true);
 
 
-                    // Attempt to attach the database
-                    AttachDatabase("DrafixUpdate", databaseFilePath, logFilePath);
-                }
+					// Attempt to attach the database
+					AttachDatabase("DrafixUpdate", databaseFilePath, logFilePath);
+				}
 
 				Logit($"The database is attached");
 
-                Console.WriteLine("Database is attached and ready for use.");
+				Console.WriteLine("Database is attached and ready for use.");
 
 				// Execute the stored procedure
 				Logit($"Executing SPROC");
 
-                ExecuteStoredProcedure("dbo.USP_Upgrade_26_0");
+				ExecuteStoredProcedure("dbo.USP_Upgrade_26_0");
 
 				//Close Connections
 				Logit($"Closing database connections");
 
-                CloseDatabaseConnections("DrafixUpdate");
+				CloseDatabaseConnections("DrafixUpdate");
 
 				//Detach DrafixUpdate Database and Deletes the DrafixUpdate MDF and LDF files
 				Logit($"About to detach database and delete DrafixUpdate files");
-                DetachDatabase("DrafixUpdate");
+				DetachDatabase("DrafixUpdate");
 
 				Logit($"Database was sucessfully detached");
-                _Form.UpdateStatus("Database 'DrafixUpdate' detached successfully.", 100, 100, true);
+				_Form.UpdateStatus("Database 'DrafixUpdate' detached successfully.", 100, 100, true);
 
 				//Delete MDF and LDF files after succesful detachment
 				Logit($"Deleting mdf and ldf files");
 
-                if (File.Exists(databaseFilePath))
-                {
-                    File.Delete(databaseFilePath);
+				if (File.Exists(databaseFilePath))
+				{
+					File.Delete(databaseFilePath);
 					Logit($"Deleted {databaseFilePath}");
-                    Console.WriteLine("Deleted DrafixUpdate.mdf");
-                }
+					Console.WriteLine("Deleted DrafixUpdate.mdf");
+				}
 
-                if (File.Exists(logFilePath))
-                {
-                    File.Delete(logFilePath);
+				if (File.Exists(logFilePath))
+				{
+					File.Delete(logFilePath);
 					Logit($"Deleted {logFilePath}");
-                    Console.WriteLine("Deleted DrafixUpdate_log.ldf");
-                }
-            }
-            catch (Exception error)
+					Console.WriteLine("Deleted DrafixUpdate_log.ldf");
+				}
+			}
+			catch (Exception error)
             {
-				Logit($"Error {error.Message}");
+                Logit($"Error {error.Message}");
             }
 
-			// Exit the application after the process is done
-			Logit($"Done");
+            // Exit the application after the process is done
+            Logit($"Done");
             Application.Exit();
 
             return true;
         }
 
-        private void Logit(string message)
-        {
+		private bool DoFilesExist(string databasePath, out string databaseFilePath, out string logFilePath)
+		{
+			// Check if the DrafixUpdate.mdf file exists
+			databaseFilePath = Path.Combine(databasePath, "DrafixUpdate.mdf");
+			logFilePath = Path.Combine(databasePath, "DrafixUpdate_log.ldf");
+			Logit($"Checking to see if the .mdf and .ldf files exist");
+
+			if (!File.Exists(databaseFilePath))
+			{
+				Logit($"Could not find {databaseFilePath}");
+				_Form.UpdateStatus("Cannot find database file", 100, 100, false);
+				return false;
+			}
+			else
+				Logit($"Found {databaseFilePath}");
+
+			if (!File.Exists(logFilePath))
+			{
+				Logit($"Could not find {logFilePath}");
+				_Form.UpdateStatus("Cannot find database file", 100, 100, false);
+				return false;
+			}
+			else
+				Logit($"Found {logFilePath}");
+
+			return true;
+		}
+
+		private bool CheckODBCDrivers()
+		{
+			Logit();
+			Logit($"Validate that the ODBC driver is present");
+			Logit();
+
+			var hkSoftware = Registry.LocalMachine.OpenSubKey("Software");
+
+			if (hkSoftware != null)
+			{
+				var hkODBC = hkSoftware.OpenSubKey("ODBC");
+
+				if (hkODBC != null)
+				{
+					var hkODBCINI = hkODBC.OpenSubKey("ODBC.INI");
+
+					if (hkODBCINI != null)
+					{
+						Logit($"    --------------------------------------------------");
+						Logit($"    List of ODBC Drivers in ODBC.INI");
+						Logit($"    --------------------------------------------------");
+
+						bool foundDrafixSQL = false;
+
+						foreach (var name in hkODBCINI.GetSubKeyNames())
+						{
+							Logit($"        {name}");
+
+							if (name.Equals("DrafixSQL", StringComparison.CurrentCultureIgnoreCase))
+								foundDrafixSQL = true;
+						}
+
+						Logit();
+
+						var hksources = hkODBCINI.OpenSubKey("ODBC Data Sources");
+						Logit($"    --------------------------------------------------");
+						Logit($"    List of ODBC Data Sources");
+						Logit($"    --------------------------------------------------");
+
+						if (hksources != null)
+						{
+							foreach (var name in hksources.GetValueNames())
+							{
+								Logit($"        {name}");
+							}
+
+							Logit();
+							hksources.Close();
+						}
+						else
+						{
+							hkODBCINI.Close();
+							hkODBC.Close();
+							hkSoftware.Close();
+
+							Logit("    Couldn't open HKLM\\Software\\ODBC\\ODBC.INI\\ODBC Data Sources");
+							Logit("    The DrafixSQL driver, if it exists, is not configured properly.");
+							Logit();
+							return false;
+						}
+
+						if (foundDrafixSQL)
+						{
+							var hkDrafixSQL = hkODBCINI.OpenSubKey("DrafixSQL");
+
+							if (hkDrafixSQL != null)
+							{
+								Logit($"    --------------------------------------------------");
+								Logit($"    DrafixSQL details");
+								Logit($"    --------------------------------------------------");
+								Logit($"        ODBC Driver {hkDrafixSQL.GetValue("Driver")}");
+								Logit($"        Server {hkDrafixSQL.GetValue("Server")}");
+								Logit($"        Trusted Connection {hkDrafixSQL.GetValue("Trusted_Connection")}");
+								Logit($"        Trust Server Certificate {hkDrafixSQL.GetValue("TrustServerCertificate")}");
+
+								hkDrafixSQL.Close();
+							}
+							else
+							{
+								hkODBCINI.Close();
+								hkODBC.Close();
+								hkSoftware.Close();
+
+								Logit("    Couldn't open HKLM\\Software\\ODBC\\ODBC.INI\\DrafixSQL");
+								return false;
+							}
+						}
+						else
+						{
+							hkODBCINI.Close();
+							hkODBC.Close();
+							hkSoftware.Close();
+
+							Logit("    The DrafixSLQ ODBC Driver was NOT found - this program will not work.");
+							return false;
+						}
+
+						hkODBCINI.Close();
+					}
+					else
+					{
+						Logit($"    --------------------------------------------------");
+						Logit("    Couldn't open HKLM\\Software\\ODBC\\ODBC.INI");
+						hkODBC.Close();
+						hkSoftware.Close();
+						return false;
+					}
+
+					hkODBC.Close();
+				}
+				else
+				{
+					Logit("Couldn't open HKLM\\Software\\ODBC");
+					hkSoftware.Close();
+					return false;
+				}
+
+				hkSoftware.Close();
+			}
+			else
+			{
+				Logit("Couldn't open HKLM\\Software");
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool CheckOperatingSystem()
+		{
+			if (Environment.Is64BitProcess)
+				Logit($"Operating System: {Environment.OSVersion.Platform} 64 bit");
+			else
+			{
+				Logit($"Operating System: {Environment.OSVersion.Platform} 32 bit");
+
+				Logit();
+				Logit("This program is running as a 32 bit program - it needs to be 64 bit.");
+				return false;
+			}
+
+			return true;
+		}
+
+		private void Logit(string message)
+		{
 			if (_Form.IsLoggingOn)
 				_Form.log.WriteLine(message);
+		}
+
+		private void Logit()
+		{
+			if (_Form.IsLoggingOn)
+				_Form.log.WriteLine();
 		}
 
 		/// <summary>
@@ -273,6 +357,7 @@ namespace DatabaseUpdater
 
 			return filePath;
         }
+
         /// <summary>
         /// Checks if a database is attached to the SQL Server.
         /// </summary>
@@ -441,6 +526,18 @@ namespace DatabaseUpdater
 				}
 			}
         }
-    }
+
+		private void ValidateDatabaseConnection()
+		{
+			string connectionString = "DSN=DrafixSQL;Database=master;ExtendedAnsiSQL=1;TrustedConnection=True;";
+			Logit($"ValidateDatabaseConnection: Connecting to database: {connectionString}");
+
+			using (OdbcConnection connection = new OdbcConnection(connectionString))
+			{
+				connection.Open();
+				Logit($"ValidateDatabaseConnection: Successfully connected.");
+			}
+		}
+	}
 }
 
